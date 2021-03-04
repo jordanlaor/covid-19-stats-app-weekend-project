@@ -1,9 +1,6 @@
-const world = {
-  buildWorld(data) {
-    console.log(data);
-  },
-};
+const world = {};
 let countriesData;
+let covidData;
 const urls = {
   // FIXME fix cors problem
   countries: 'https://restcountries.herokuapp.com/api/v1',
@@ -35,6 +32,35 @@ function handleResize() {
   canvas.height = parseInt(window.getComputedStyle(canvasWrapper).height);
 }
 
+function drawBtns(object, type) {
+  const wrapper = document.querySelector(`.btns__${type}`);
+  const list = Object.keys(object).filter((key) => object[key].type === type);
+  list.forEach((item) => {
+    const btn = document.createElement('button');
+    // TODO add to css class of btn
+    btn.classList.add('btn');
+    btn.textContent = item;
+    wrapper.append(btn);
+  });
+  if (type === 'continent') {
+    const btn = document.createElement('button');
+    // TODO add to css class of btn
+    btn.classList.add('btn');
+    btn.textContent = 'World';
+    wrapper.append(btn);
+  }
+}
+
+async function continentClick(e) {
+  // TODO add real things
+  covidData = await fetchData(urls.covid);
+  for (const key of Object.keys(world[e.target.textContent])) {
+    // const covidCountryData = world[e.target.textContent][key].filter((counryData) => covidCountryData.code);
+  }
+  // .forEach((country) => {
+  // });
+}
+
 async function handleLoad() {
   handleResize();
   // TODO change to const
@@ -52,6 +78,9 @@ async function handleLoad() {
       new: {},
     };
   });
+  drawBtns(world, 'continent');
+  const btnsContinent = document.querySelector('.btns__continent');
+  btnsContinent.addEventListener('click', continentClick);
 }
 
 // Window event listeners
