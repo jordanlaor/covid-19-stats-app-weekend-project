@@ -20,6 +20,16 @@ async function fetchData(url) {
 }
 
 function handleResize() {
-  canvas.width = window.getComputedStyle(canvas.parentElement).width;
-  canvas.height = window.getComputedStyle(canvas.parentElement).height;
+  canvas.width = parseInt(window.getComputedStyle(canvas.parentElement).width);
+  console.log(window.getComputedStyle(canvas.parentElement).width, canvas.width);
+  canvas.height = parseInt(window.getComputedStyle(canvas.parentElement).height);
+  console.log(window.getComputedStyle(canvas.parentElement).height, canvas.height);
 }
+
+function handleLoad() {
+  handleResize();
+}
+
+// Window event listeners
+window.addEventListener('load', handleLoad);
+window.addEventListener('resize', handleResize);
