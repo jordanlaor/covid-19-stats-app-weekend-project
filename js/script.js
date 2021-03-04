@@ -1,14 +1,13 @@
-function handleError (error) {
+function handleError(error) {
   console.log(error);
 }
 
-async fetchData(url) {
+async function fetchData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
     return data;
-  }
-  catch(error) {
+  } catch (error) {
     handleError(error);
   }
 }
