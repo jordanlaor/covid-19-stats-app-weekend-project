@@ -9,8 +9,8 @@ html {
   font-family: "Quicksand", sans-serif;
 }
 
-main {
-  height: -webkit-fill-available;
+.main {
+  height: 100vh;
   width: -webkit-fill-available;
   padding: 30px 20px;
   display: grid;

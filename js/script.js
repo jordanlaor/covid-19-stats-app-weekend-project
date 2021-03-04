@@ -1,8 +1,18 @@
-const countries = {};
-const world = new Map();
+const world = {
+  buildWorld(data) {
+    console.log(data);
+  },
+};
+let countriesData;
+const urls = {
+  // FIXME fix cors problem
+  countries: 'https://restcountries.herokuapp.com/api/v1',
+  covid: 'https://corona-api.com/countries',
+};
 
 // HTML elements
-const canvas = document.querySelector('.graph__canvas');
+const canvas = document.querySelector('#graph__canvas');
+const canvasWrapper = document.querySelector('.graph__wrapper');
 const errorWrapper = document.querySelector('.error__wrapper');
 
 function handleError(error) {
@@ -20,14 +30,28 @@ async function fetchData(url) {
 }
 
 function handleResize() {
-  canvas.width = parseInt(window.getComputedStyle(canvas.parentElement).width);
-  console.log(window.getComputedStyle(canvas.parentElement).width, canvas.width);
-  canvas.height = parseInt(window.getComputedStyle(canvas.parentElement).height);
-  console.log(window.getComputedStyle(canvas.parentElement).height, canvas.height);
+  // FIXME Why the canvas re-size doesnt work??
+  canvas.width = parseInt(window.getComputedStyle(canvasWrapper).width);
+  canvas.height = parseInt(window.getComputedStyle(canvasWrapper).height);
 }
 
-function handleLoad() {
+async function handleLoad() {
   handleResize();
+  // TODO change to const
+  countriesData = await fetchData(urls.countries);
+  countriesData.forEach((country) => {
+    if (!world[country.region]) {
+      world[country.region] = {
+        type: 'continent',
+      };
+    }
+    world[country.region][country.name.common] = {
+      code: country.cca2,
+      type: 'country',
+      total: {},
+      new: {},
+    };
+  });
 }
 
 // Window event listeners
