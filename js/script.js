@@ -55,7 +55,7 @@ async function continentClick(e) {
   // TODO add real things
   covidData = await fetchData(urls.covid);
   for (const key of Object.keys(world[e.target.textContent])) {
-    // const covidCountryData = world[e.target.textContent][key].filter((counryData) => covidCountryData.code);
+    const covidCountryData = world[e.target.textContent][key].filter((counryData) => counryData.);
   }
   // .forEach((country) => {
   // });
