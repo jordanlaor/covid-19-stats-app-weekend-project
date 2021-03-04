@@ -1,7 +1,12 @@
+const countries = {};
+const world = new Map();
+
+// HTML elements
 const canvas = document.querySelector('.graph__canvas');
+const errorWrapper = document.querySelector('.error__wrapper');
 
 function handleError(error) {
-  console.log(error);
+  errorWrapper.textContent = error;
 }
 
 async function fetchData(url) {

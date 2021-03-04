@@ -3,3 +3,18 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+html {
+  font-size: 15px;
+  font-family: "Quicksand", sans-serif;
+}
+
+main {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: max-content max-content 1fr max-content;
+}
+
+.error__wrapper {
+  height: calc(1rem * 1.15);
+}
