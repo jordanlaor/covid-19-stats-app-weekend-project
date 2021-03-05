@@ -14,7 +14,7 @@ const errorWrapper = document.querySelector('.error__wrapper');
 
 function handleError(error) {
   errorWrapper.textContent = error;
-  setTimeout(() => (errorWrapper.textContent = ''), 1000);
+  setTimeout(() => (errorWrapper.textContent = ''), 3000);
   console.error(error);
 }
 
@@ -164,7 +164,7 @@ async function countryClick(e) {
         elements: {
           point: {
             backgroundColor: 'transparent',
-            borderColor: '#00000040',
+            borderColor: 'transparent',
             borderWidth: 1,
             radius: 2,
           },
