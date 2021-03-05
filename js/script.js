@@ -336,8 +336,6 @@ async function handleLoad() {
       world[country.region][country.name.common] = {
         code: country.cca2,
         type: 'country',
-        total: {},
-        new: {},
       };
       countries[country.name.common] = country.region;
     }
