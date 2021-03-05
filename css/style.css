@@ -45,7 +45,7 @@ body {
   width: -webkit-fill-available;
   padding: 30px 40px;
   display: grid;
-  grid-template-rows: min-content max-content 3fr 1fr;
+  grid-template-rows: min-content max-content minmax(max-content, 3fr) 1fr;
   grid-template-columns: 1fr;
 }
 
