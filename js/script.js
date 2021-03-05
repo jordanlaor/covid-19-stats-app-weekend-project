@@ -1,8 +1,6 @@
 // TODO clean debugger, console.log
 const world = {};
 const countries = {};
-let countriesData;
-let covidData;
 let chart;
 let currentGraph;
 const urls = {
@@ -17,7 +15,7 @@ const errorWrapper = document.querySelector('.error__wrapper');
 function handleError(error) {
   errorWrapper.textContent = error;
   setTimeout(() => (errorWrapper.textContent = ''), 1000);
-  console.log(error);
+  console.error(error);
 }
 
 async function fetchData(url) {
@@ -65,14 +63,12 @@ function drawBtns(object, type) {
   const list = Object.keys(object).filter((key) => object[key].type === type);
   list.forEach((item) => {
     const btn = document.createElement('button');
-    // TODO add to css class of btn
     btn.classList.add('btn');
     btn.textContent = item;
     wrapper.append(btn);
   });
   if (type === 'continent') {
     const btn = document.createElement('button');
-    // TODO add to css class of btn
     btn.classList.add('btn');
     btn.textContent = 'World';
     wrapper.append(btn);
@@ -80,13 +76,14 @@ function drawBtns(object, type) {
 }
 
 async function countryClick(e) {
-  // TODO convert to const
   if (currentGraph !== e.target.textContent) {
     currentGraph = e.target.textContent;
-    console.log(world[countries[e.target.textContent]][e.target.textContent].code);
     try {
-      covidData = await fetchData(`${urls.covid}/${world[countries[e.target.textContent]][e.target.textContent].code}`);
+      const covidData = await fetchData(
+        `${urls.covid}/${world[countries[e.target.textContent]][e.target.textContent].code}`
+      );
       const labels = [];
+      const dataCritical = [];
       const dataConfirmed = [];
       const dataNewConfirmed = [];
       const dataDeaths = [];
@@ -94,19 +91,19 @@ async function countryClick(e) {
       const dataRecovered = [];
       const dataNewRecovered = [];
       covidData.data.timeline.forEach((update) => {
-        labels.push(
-          new Date(update.date)
-          // .toLocaleDateString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' })
-        );
-        // console.log(update);
+        labels.push(new Date(update.date));
         dataConfirmed.push({ x: new Date(update.date), y: update.confirmed });
         dataNewConfirmed.push({ x: new Date(update.date), y: update.new_confirmed });
-        // dataCritical.push(update.critical);
         dataDeaths.push({ t: new Date(update.date), y: update.deaths });
         dataNewDeaths.push({ t: new Date(update.date), y: update.new_deaths });
         dataRecovered.push({ t: new Date(update.date), y: update.recovered });
         dataNewRecovered.push({ t: new Date(update.date), y: update.new_recovered });
       });
+      dataCritical.push({
+        t: new Date(covidData.data.updated_at.match(/\d{4}-\d{2}-\d{2}/g)),
+        y: covidData.data.latest_data.critical,
+      });
+
       if (covidData.data.timeline.length === 0) {
         handleError('There is no data available');
       }
@@ -114,155 +111,52 @@ async function countryClick(e) {
         {
           label: 'Total Confirmed',
           data: dataConfirmed,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(255, 99, 132, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Confirmed',
           data: dataNewConfirmed,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            'rgba(193, 37, 83)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(193, 37, 83)'],
           borderWidth: 3,
         },
         {
           label: 'Total Recovered',
           data: dataRecovered,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(54, 162, 235, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Recovered',
           data: dataNewRecovered,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            'rgba(0, 111, 179, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(0, 111, 179, 1)'],
           borderWidth: 3,
         },
-        // {
-        //   label: 'Total Critical',
-        //   data: dataCritical,
-        //   backgroundColor: [
-        //     'transparent',
-        //     // 'rgba(255, 99, 132, 0.2)',
-        //     // 'rgba(54, 162, 235, 0.2)',
-        //     // 'rgba(255, 206, 86, 0.2)',
-        //     // 'rgba(75, 192, 192, 0.2)',
-        //     // 'rgba(153, 102, 255, 0.2)',
-        //     // 'rgba(255, 159, 64, 0.2)',
-        //   ],
-        //   borderColor: [
-        //     // 'rgba(255, 99, 132, 1)',
-        //     // 'rgba(54, 162, 235, 1)',
-        //     'rgba(255, 206, 86, 1)',
-        //     // 'rgba(75, 192, 192, 1)',
-        //     // 'rgba(153, 102, 255, 1)',
-        //     // 'rgba(255, 159, 64, 1)',
-        //   ],
-        //   borderWidth: 3,
-        // },
         {
           label: 'Total Deaths',
           data: dataDeaths,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(75, 192, 192, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Deaths',
           data: dataNewDeaths,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            'rgba(0, 138, 139, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(0, 138, 139, 1)'],
+          borderWidth: 3,
+        },
+        {
+          label: 'Total Critical',
+          data: dataCritical,
+          showLine: false,
+          type: 'bar',
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(255, 206, 86, 1)'],
           borderWidth: 3,
         },
       ];
@@ -290,22 +184,16 @@ async function countryClick(e) {
               reverse: 'false',
               time: {
                 unit: 'day',
-                // round: 'true',
                 displayFormats: {
                   day: 'dd - MM - yy',
                 },
               },
-              suggestedMax: Date.now(),
+              suggestedMin: new Date(Date.now() - 131400 * 60000),
             },
           ],
         },
       };
       drawChart('line', labels, datasets, options);
-      // chart.options.scales.xAxes[0].type = 'time';
-      // chart.options.scales.xAxes[0].time.round = 'true';
-      // chart.options.scales.xAxes[0].time.unit = 'day';
-      // chart.options.scales.xAxes[0].time.displayFormats.day = 'DD-MM-YYYY';
-      // chart.update();
     } catch (error) {
       handleError(error);
     }
@@ -313,12 +201,10 @@ async function countryClick(e) {
 }
 
 async function continentClick(e) {
-  // TODO add real things
-  // TODO convert to const
   if (currentGraph !== e.target.textContent) {
     currentGraph = e.target.textContent;
     try {
-      covidData = await fetchData(urls.covid);
+      const covidData = await fetchData(urls.covid);
       const btnsCountry = document.querySelector('.btns__country');
       const labels = [];
       const dataConfirmed = [];
@@ -382,89 +268,29 @@ async function continentClick(e) {
         {
           label: 'Total Confirmed',
           data: dataConfirmed,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(255, 99, 132, 1)'],
           borderWidth: 3,
         },
         {
           label: 'Total Recovered',
           data: dataRecovered,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(54, 162, 235, 1)'],
           borderWidth: 3,
         },
         {
           label: 'Total Critical',
           data: dataCritical,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            // 'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(255, 206, 86, 1)'],
           borderWidth: 3,
         },
         {
           label: 'Total Deaths',
           data: dataDeaths,
-          backgroundColor: [
-            'transparent',
-            // 'rgba(255, 99, 132, 0.2)',
-            // 'rgba(54, 162, 235, 0.2)',
-            // 'rgba(255, 206, 86, 0.2)',
-            // 'rgba(75, 192, 192, 0.2)',
-            // 'rgba(153, 102, 255, 0.2)',
-            // 'rgba(255, 159, 64, 0.2)',
-          ],
-          borderColor: [
-            // 'rgba(255, 99, 132, 1)',
-            // 'rgba(54, 162, 235, 1)',
-            // 'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            // 'rgba(153, 102, 255, 1)',
-            // 'rgba(255, 159, 64, 1)',
-          ],
+          backgroundColor: ['transparent'],
+          borderColor: ['rgba(75, 192, 192, 1)'],
           borderWidth: 3,
         },
       ];
@@ -493,14 +319,11 @@ async function continentClick(e) {
       handleError(error);
     }
   }
-  // .forEach((country) => {
-  // });
 }
 
 async function handleLoad() {
   handleResize();
-  // TODO change to const
-  countriesData = await fetchData(urls.countries);
+  const countriesData = await fetchData(urls.countries);
   countriesData.forEach((country) => {
     if (!world[country.region]) {
       if (country.region) {
