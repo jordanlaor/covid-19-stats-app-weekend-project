@@ -8,6 +8,62 @@ const urls = {
   covid: 'https://corona-api.com/countries',
 };
 
+const options = {
+  normal: {
+    elements: {
+      point: {
+        backgroundColor: 'transparent',
+        borderColor: '#00000040',
+        borderWidth: 1,
+        radius: 2,
+      },
+    },
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  },
+  date: {
+    elements: {
+      point: {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        borderWidth: 1,
+        radius: 2,
+      },
+    },
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          type: 'time',
+          reverse: 'false',
+          time: {
+            unit: 'day',
+            displayFormats: {
+              day: 'dd - MM - yy',
+            },
+          },
+          suggestedMin: new Date(Date.now() - 131400 * 60000),
+        },
+      ],
+    },
+  },
+};
+
 // HTML elements
 const canvas = document.querySelector('#graph__canvas');
 const errorWrapper = document.querySelector('.error__wrapper');
@@ -157,43 +213,11 @@ async function countryClick(e) {
           type: 'bar',
           backgroundColor: ['transparent'],
           borderColor: ['rgba(255, 206, 86, 1)'],
-          borderWidth: 3,
+          borderWidth: 5,
         },
       ];
-      const options = {
-        elements: {
-          point: {
-            backgroundColor: 'transparent',
-            borderColor: 'transparent',
-            borderWidth: 1,
-            radius: 2,
-          },
-        },
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              type: 'time',
-              reverse: 'false',
-              time: {
-                unit: 'day',
-                displayFormats: {
-                  day: 'dd - MM - yy',
-                },
-              },
-              suggestedMin: new Date(Date.now() - 131400 * 60000),
-            },
-          ],
-        },
-      };
-      drawChart('line', labels, datasets, options);
+
+      drawChart('line', labels, datasets, options.date);
     } catch (error) {
       handleError(error);
     }
@@ -294,27 +318,8 @@ async function continentClick(e) {
           borderWidth: 3,
         },
       ];
-      const options = {
-        elements: {
-          point: {
-            backgroundColor: 'transparent',
-            borderColor: '#00000040',
-            borderWidth: 1,
-            radius: 2,
-          },
-        },
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      };
-      drawChart('line', labels, datasets, options);
+
+      drawChart('line', labels, datasets, options.normal);
     } catch (error) {
       handleError(error);
     }
@@ -344,6 +349,8 @@ async function handleLoad() {
   drawBtns(world, 'continent');
   const btnsContinent = document.querySelector('.btns__continent');
   btnsContinent.addEventListener('click', continentClick);
+
+  drawChart('line', [], [], options.normal);
 }
 
 // Window event listeners
