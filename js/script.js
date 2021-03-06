@@ -89,7 +89,7 @@ function handleResize() {
   setTimeout(() => canvas.classList.remove('hidden'), 0);
 }
 
-function drawChart(type, labels, datasets, options) {
+function drawChart(type, labels, datasets, chartOptions) {
   if (!chart) {
     chart = new Chart(canvas, {
       type,
@@ -97,14 +97,14 @@ function drawChart(type, labels, datasets, options) {
         labels,
         datasets,
       },
-      options,
+      chartOptions,
     });
   } else {
     chart.data = {
       labels,
       datasets,
     };
-    chart.options = options;
+    chart.options = chartOptions;
     chart.update();
   }
 }
