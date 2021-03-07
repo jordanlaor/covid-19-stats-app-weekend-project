@@ -2,17 +2,20 @@
   html {
     font-size: 13px;
   }
+
   .main {
     height: -webkit-fill-available;
     grid-template-rows: min-content max-content max-content max-content;
     align-content: space-between;
     padding: 10px;
   }
+
   .btns__wrapper {
     padding: 0 3px;
     width: 100%;
     overflow-y: visible;
   }
+
   .graph__wrapper {
     height: 350px;
   }

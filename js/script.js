@@ -119,12 +119,17 @@ function drawBtns(object, type) {
   list.forEach((item) => {
     const btn = document.createElement('button');
     btn.classList.add('btn');
+    if (type === 'continent') {
+      btn.classList.add('btn__continent');
+    }
     btn.textContent = item;
     wrapper.append(btn);
   });
   if (type === 'continent') {
     const btn = document.createElement('button');
     btn.classList.add('btn');
+    btn.classList.add('btn__continent');
+
     btn.textContent = 'World';
     wrapper.append(btn);
   }
@@ -138,9 +143,16 @@ function fromDayTo10(array) {
   return oncePer10;
 }
 
+function currentGraphBtn(targetBtn) {
+  const btns = document.querySelectorAll('.btn');
+  btns.forEach((btn) => btn.classList.remove('current'));
+  targetBtn.classList.add('current');
+}
+
 async function countryClick(e) {
   if (currentGraph !== e.target.textContent) {
     currentGraph = e.target.textContent;
+    currentGraphBtn(e.target);
     try {
       const covidData = await fetchData(
         `${urls.covid}/${world[countries[e.target.textContent]][e.target.textContent].code}`
@@ -234,6 +246,7 @@ async function countryClick(e) {
 async function continentClick(e) {
   if (currentGraph !== e.target.textContent) {
     currentGraph = e.target.textContent;
+    currentGraphBtn(e.target);
     try {
       const covidData = await fetchData(urls.covid);
       const btnsCountry = document.querySelector('.btns__country');
