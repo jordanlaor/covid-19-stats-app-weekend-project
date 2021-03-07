@@ -1,4 +1,3 @@
-// TODO clean debugger, console.log
 const world = {};
 const countries = {};
 let chart;
@@ -29,11 +28,12 @@ const options = {
       ],
     },
   },
+
   date: {
     elements: {
       point: {
         backgroundColor: 'transparent',
-        borderColor: 'transparent',
+        borderColor: '#00000040',
         borderWidth: 1,
         radius: 2,
       },
@@ -57,7 +57,6 @@ const options = {
               day: 'dd - MM - yy',
             },
           },
-          suggestedMin: new Date(Date.now() - 131400 * 60000),
         },
       ],
     },
@@ -131,6 +130,14 @@ function drawBtns(object, type) {
   }
 }
 
+function fromDayToWeek(array) {
+  const oncePerWeek = [];
+  for (let i = array.length - 1; i >= 0; i -= 7) {
+    oncePerWeek.unshift(array[i]);
+  }
+  return oncePerWeek;
+}
+
 async function countryClick(e) {
   if (currentGraph !== e.target.textContent) {
     currentGraph = e.target.textContent;
@@ -166,42 +173,42 @@ async function countryClick(e) {
       const datasets = [
         {
           label: 'Total Confirmed',
-          data: dataConfirmed,
+          data: fromDayToWeek(dataConfirmed),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(255, 99, 132, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Confirmed',
-          data: dataNewConfirmed,
+          data: fromDayToWeek(dataNewConfirmed),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(193, 37, 83)'],
           borderWidth: 3,
         },
         {
           label: 'Total Recovered',
-          data: dataRecovered,
+          data: fromDayToWeek(dataRecovered),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(54, 162, 235, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Recovered',
-          data: dataNewRecovered,
+          data: fromDayToWeek(dataNewRecovered),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(0, 111, 179, 1)'],
           borderWidth: 3,
         },
         {
           label: 'Total Deaths',
-          data: dataDeaths,
+          data: fromDayToWeek(dataDeaths),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(75, 192, 192, 1)'],
           borderWidth: 3,
         },
         {
           label: 'New Deaths',
-          data: dataNewDeaths,
+          data: fromDayToWeek(dataNewDeaths),
           backgroundColor: ['transparent'],
           borderColor: ['rgba(0, 138, 139, 1)'],
           borderWidth: 3,
@@ -217,7 +224,7 @@ async function countryClick(e) {
         },
       ];
 
-      drawChart('line', labels, datasets, options.date);
+      drawChart('line', fromDayToWeek(labels), datasets, options.date);
     } catch (error) {
       handleError(error);
     }
