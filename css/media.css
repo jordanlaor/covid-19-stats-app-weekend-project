@@ -4,7 +4,8 @@
   }
   .main {
     height: -webkit-fill-available;
-    grid-template-rows: min-content max-content minmax(max-content, 1fr) 1fr;
+    grid-template-rows: min-content max-content max-content max-content;
+    align-content: space-between;
     padding: 10px;
   }
   .btns__wrapper {
